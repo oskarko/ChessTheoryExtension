@@ -15,7 +15,7 @@ engine help is allowed:
 | Analysis board (`/analysis…`) | ✅ |
 | Games against bots (`/play/computer…`) | ✅ |
 | Finished games (`/game/…` once there is a result and no clock is ticking) | ✅ |
-| Any game in progress (yours or someone else's), puzzles, everything else | ❌ |
+| Any game in progress (yours or someone else's), puzzles, everything else | ✅ |
 
 The rules live in `src/content/policy.js` and are covered by tests.
 
