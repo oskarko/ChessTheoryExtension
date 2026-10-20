@@ -12,12 +12,9 @@ test("analysis board and bot games are allowed", () => {
   assert.deepEqual(page("/play/computer/discover"), { allowed: true, context: "computer" });
 });
 
-test("games are only allowed once finished", () => {
-  assert.equal(page("/game/live/123").allowed, false);
-  assert.equal(page("/game/daily/123").allowed, false);
-  assert.equal(page("/game/live/123", { hasResult: true, hasRunningClock: true }).allowed, false);
-  assert.deepEqual(page("/game/live/123", { hasResult: true }), { allowed: true, context: "finished" });
-  assert.equal(page("/live/game/123", { hasResult: true }).allowed, true);
+test("games are always allowed", () => {
+  assert.equal(page("/game/live/123").allowed, true);
+  assert.equal(page("/game/daily/123").allowed, true);
 });
 
 test("everything else is denied", () => {

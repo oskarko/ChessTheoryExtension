@@ -18,7 +18,9 @@
   function evaluatePolicy({ pathname, hasResult, hasRunningClock }) {
     if (ANALYSIS.test(pathname)) return { allowed: true, context: "analysis" };
     if (COMPUTER.test(pathname)) return { allowed: true, context: "computer" };
-    if (GAME.test(pathname)) return { allowed: true, context: "finished" };}
+    if (GAME.test(pathname)) return { allowed: true, context: "finished" };
+    return { allowed: false, context: "not-allowed" };
+  }
 
   const api = { evaluatePolicy };
   root.CT = Object.assign(root.CT || {}, api);
