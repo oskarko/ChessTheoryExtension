@@ -119,6 +119,6 @@ handling and accuracy.
 
 ## License
 
-Stockfish is GPLv3 (`vendor/stockfish/COPYING.txt`); distributing this
-extension with the bundled engine must comply with the GPL.
-chess.js is BSD-2-Clause (`vendor/chessjs/LICENSE`).
+[GPLv3](LICENSE), because the extension bundles Stockfish, which is GPLv3
+(`vendor/stockfish/COPYING.txt`). chess.js is BSD-2-Clause
+(`vendor/chessjs/LICENSE`).
