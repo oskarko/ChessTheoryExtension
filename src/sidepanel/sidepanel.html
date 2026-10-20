@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ChessTheory Analyzer</title>
+  <link rel="stylesheet" href="sidepanel.css">
+</head>
+<body>
+  <header>
+    <h1>ChessTheory</h1>
+    <span id="status" class="pill pill-off">Conectando…</span>
+  </header>
+
+  <section id="inactive" class="card notice" hidden>
+    <p id="inactive-text"></p>
+  </section>
+
+  <main id="analysis" hidden>
+    <div class="evalbar" aria-hidden="true"><div id="evalbar-white"></div></div>
+
+    <section class="card best">
+      <div class="row">
+        <span id="to-move" class="to-move"></span>
+        <span id="eval" class="eval"></span>
+      </div>
+      <div id="best-move" class="best-move">…</div>
+      <div id="depth" class="muted"></div>
+    </section>
+
+    <section class="card">
+      <h2>Líneas</h2>
+      <ol id="lines" class="lines"></ol>
+    </section>
+
+    <section id="last-move" class="card" hidden>
+      <h2>Última jugada</h2>
+      <div id="last-move-text"></div>
+    </section>
+
+    <section class="card">
+      <h2>Turno</h2>
+      <div class="segmented" id="turn-override" role="radiogroup">
+        <button data-value="auto" aria-pressed="true">Auto</button>
+        <button data-value="w" aria-pressed="false">Blancas</button>
+        <button data-value="b" aria-pressed="false">Negras</button>
+      </div>
+      <p id="turn-hint" class="muted small" hidden>No he podido deducir el turno: elige quién mueve si no cuadra.</p>
+    </section>
+  </main>
+
+  <section class="card">
+    <h2>Ajustes</h2>
+    <label class="setting">Profundidad <output id="depth-value"></output>
+      <input id="setting-depth" type="range" min="10" max="30" step="1">
+    </label>
+    <label class="setting">Líneas
+      <select id="setting-lines">
+        <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+        <option value="4">4</option><option value="5">5</option>
+      </select>
+    </label>
+    <label class="setting checkbox"><input id="setting-arrows" type="checkbox"> Flechas en el tablero</label>
+  </section>
+
+  <section class="card fen" id="fen-card" hidden>
+    <code id="fen"></code>
+    <button id="copy-fen" class="link">Copiar FEN</button>
+  </section>
+
+  <footer class="muted small">
+    Solo funciona en el tablero de análisis, partidas contra bots y partidas terminadas.
+  </footer>
+
+  <script type="module" src="sidepanel.js"></script>
+</body>
+</html>
