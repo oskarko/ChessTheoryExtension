@@ -15,6 +15,9 @@ test("analysis board and bot games are allowed", () => {
 test("games are always allowed", () => {
   assert.equal(page("/game/live/123").allowed, true);
   assert.equal(page("/game/daily/123").allowed, true);
+  assert.equal(page("/game/live/123").context, "in-progress");
+  assert.equal(page("/game/live/123", { hasRunningClock: true, hasResult: true }).context, "in-progress");
+  assert.equal(page("/game/live/123", { hasResult: true }).context, "finished");
 });
 
 test("everything else is denied", () => {

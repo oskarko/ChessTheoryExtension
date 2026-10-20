@@ -12,6 +12,12 @@
     <span id="status" class="pill pill-off">Conectando…</span>
   </header>
 
+  <section id="fair-play" class="card notice warning" hidden>
+    <p><strong>Solo para estudio.</strong> Usar el motor en una partida en curso contra otra persona
+      incumple la política de juego limpio de chess.com y lleva al cierre de la cuenta (ban). chess.com
+      lo detecta analizando las jugadas, no buscando la extensión. Repasa la partida cuando termine.</p>
+  </section>
+
   <section id="inactive" class="card notice" hidden>
     <p id="inactive-text"></p>
   </section>
@@ -36,6 +42,15 @@
     <section id="last-move" class="card" hidden>
       <h2>Última jugada</h2>
       <div id="last-move-text"></div>
+    </section>
+
+    <section id="accuracy" class="card" hidden>
+      <h2>Precisión</h2>
+      <div class="accuracy">
+        <div><span class="muted">Blancas</span> <strong id="accuracy-white"></strong></div>
+        <div><span class="muted">Negras</span> <strong id="accuracy-black"></strong></div>
+      </div>
+      <p id="accuracy-count" class="muted small"></p>
     </section>
 
     <section class="card">
@@ -69,7 +84,7 @@
   </section>
 
   <footer class="muted small">
-    Solo funciona en el tablero de análisis, partidas contra bots y partidas terminadas.
+    Solo para estudio y entrenamiento. Usarla en partidas contra personas puede suponer el ban de tu cuenta de chess.com.
   </footer>
 
   <script type="module" src="sidepanel.js"></script>

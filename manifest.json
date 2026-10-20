@@ -3,7 +3,7 @@
   "name": "ChessTheory Analyzer",
   "short_name": "ChessTheory",
   "version": "0.1.0",
-  "description": "Stockfish analysis for chess.com analysis boards, bot games and finished games. Never active during live games.",
+  "description": "Live Stockfish analysis for chess.com: analysis board, bot games and games, with move grades and game accuracy.",
   "minimum_chrome_version": "116",
   "permissions": ["sidePanel", "storage"],
   "background": {

@@ -1,6 +1,7 @@
 import { Engine } from "./engine.js";
 import { preparePosition, followingMove, pvToSan } from "./position.js";
 import { judgeMove, toWhiteCp, QUALITIES } from "./quality.js";
+import { gameAccuracy } from "./accuracy.js";
 
 const DEFAULTS = { depth: 20, lines: 3, arrows: true };
 // Below this depth the evaluation is too noisy to grade the move that follows.
@@ -16,12 +17,11 @@ const CONTEXT_LABELS = {
   analysis: "Tablero de análisis",
   computer: "Partida contra bot",
   finished: "Partida terminada",
+  "in-progress": "Partida en curso",
 };
 const INACTIVE_TEXT = {
-  "in-progress":
-    "Partida en curso: el análisis está desactivado por juego limpio. Se activará en cuanto la partida termine.",
   "not-allowed":
-    "Esta página no está permitida. Abre el tablero de análisis, una partida contra un bot o una partida terminada.",
+    "Esta página no está permitida. Abre el tablero de análisis, una partida contra un bot o una partida.",
   "no-content": "Abre chess.com en esta pestaña (o recárgala si acabas de instalar la extensión).",
 };
 
@@ -40,6 +40,10 @@ let judgement = null; // { san, uci, prev } until the new position is deep enoug
 // position right before the current one is not necessarily the one moved from.
 const evaluations = new Map();
 const MAX_EVALUATIONS = 64;
+// Graded moves of the current game for the accuracy card, keyed by the FEN moved from
+// so going back and forth over the same moves doesn't count them twice.
+const gameMoves = new Map();
+const START_BOARD = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
 let renderQueued = false;
 let lastArrowsKey = "";
 
@@ -65,16 +69,13 @@ const engine = new Engine(chrome.runtime.getURL("vendor/stockfish/stockfish-18-l
 function finishJudgement() {
   if (!judgement?.prev || !lines[0]) return;
   const { prev, san, uci } = judgement;
-  judgement = {
-    san,
-    ...judgeMove({
-      played: uci,
-      engineBest: prev.bestMove,
-      beforeCp: prev.whiteCp,
-      afterCp: toWhiteCp(lines[0].info.score, position.turn),
-      moverIsWhite: prev.fen.split(" ")[1] === "w",
-    }),
+  const move = {
+    beforeCp: prev.whiteCp,
+    afterCp: toWhiteCp(lines[0].info.score, position.turn),
+    moverIsWhite: prev.fen.split(" ")[1] === "w",
   };
+  gameMoves.set(prev.fen, move);
+  judgement = { san, ...judgeMove({ played: uci, engineBest: prev.bestMove, ...move }) };
 }
 
 function recordEvaluation(top) {
@@ -131,6 +132,7 @@ function resetAnalysis() {
   lines = [];
   judgement = null;
   evaluations.clear();
+  gameMoves.clear();
   sendArrows([]);
 }
 
@@ -154,6 +156,7 @@ function analyseCurrent() {
   if (position && prepared.fen === position.fen && prepared.status === position.status) return;
 
   judgement = moveInto(prepared.fen ?? state.fen, state.lastMove);
+  if (state.fen.split(" ")[0] === START_BOARD) gameMoves.clear(); // a new game
 
   position = { ...prepared, turnSource: state.turnSource };
   lines = [];
@@ -200,6 +203,7 @@ function render() {
   status.textContent = active ? CONTEXT_LABELS[state.context] ?? "Activo" : "Inactivo";
   status.className = `pill ${active ? "pill-on" : "pill-off"}`;
 
+  $("fair-play").hidden = state?.context !== "in-progress";
   $("inactive").hidden = active && !!state.fen;
   $("analysis").hidden = !(active && state.fen && position);
   $("fen-card").hidden = !(active && position?.fen);
@@ -245,6 +249,8 @@ function render() {
     updateArrows();
   }
 
+  renderAccuracy();
+
   const lm = $("last-move");
   lm.hidden = !judgement;
   if (judgement) {
@@ -263,6 +269,15 @@ function render() {
       text.textContent = `${judgement.san} — evaluando…`;
     }
   }
+}
+
+function renderAccuracy() {
+  const { white, black } = gameAccuracy([...gameMoves.values()]);
+  $("accuracy").hidden = white === null && black === null;
+  const format = (a) => (a === null ? "—" : a.toFixed(1));
+  $("accuracy-white").textContent = format(white);
+  $("accuracy-black").textContent = format(black);
+  $("accuracy-count").textContent = `${gameMoves.size} jugadas analizadas`;
 }
 
 function lineItem({ info, san }) {

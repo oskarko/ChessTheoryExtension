@@ -58,6 +58,8 @@ h2 { font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: v
 }
 
 .notice p { margin: 0; }
+.warning { border-color: var(--off); color: var(--off); }
+.warning strong { color: inherit; }
 
 .evalbar {
   height: 10px;
@@ -72,6 +74,10 @@ h2 { font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: v
 .to-move { color: var(--muted); }
 .eval { font-variant-numeric: tabular-nums; font-weight: 600; }
 .best-move { font-size: 28px; font-weight: 700; margin: 2px 0; }
+
+.accuracy { display: flex; gap: 16px; }
+.accuracy strong { font-size: 20px; font-variant-numeric: tabular-nums; }
+#accuracy-count { margin: 4px 0 0; }
 
 .lines { margin: 0; padding-left: 0; list-style: none; }
 .lines li { display: flex; gap: 8px; padding: 3px 0; border-top: 1px solid var(--border); }
